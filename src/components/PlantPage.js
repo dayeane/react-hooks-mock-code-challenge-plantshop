@@ -5,21 +5,31 @@ import Search from "./Search";
 
 function PlantPage() {
 const [plants,setPlants] = useState([])
-
+const [allPlants, setAllPants] = useState([])
 function addNewPlant(plant) {
   setPlants([...plants,plant])
   
 }
 
+function searchList(e) {
+  const filteredPlants = allPlants.filter((plant) => {
+    return plant.name.includes(e.currentTarget.value)
+  })
+  setPlants(filteredPlants)
+}
+
 useEffect(() => {
   fetch('http://localhost:6001/plants')
   .then(res => res.json())
-  .then(setPlants)
+  .then((data)=>{
+    setPlants(data)
+    setAllPants(data)
+  })
 }, [])
   return (
     <main>
       <NewPlantForm addNewPlant={addNewPlant}/>
-      <Search />
+      <Search searchList={searchList}/>
       <PlantList plants={plants} />
     </main>
   );
